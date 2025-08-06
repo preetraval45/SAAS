@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { MoreHorizontal, Edit, Trash2, Calendar, User } from 'lucide-react';
 import { Menu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import { motion } from 'framer-motion';
 
 interface Task {
@@ -16,8 +15,8 @@ interface Task {
 }
 
 interface TaskTableProps {
-  tasks: Task[];
-  onUpdate: () => void;
+  readonly tasks: readonly Task[];
+  readonly onUpdate: () => void;
 }
 
 export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
@@ -89,11 +88,11 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
   return (
     <div className="overflow-x-auto">
       {/* Mobile Card Layout */}
-      <div className="block md:hidden space-y-4 p-4">
+      <div className="block p-4 space-y-4 md:hidden">
         {sortedTasks.map((task, index) => (
           <motion.div
             key={task.id}
-            className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+            className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -104,7 +103,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
                 <Menu.Button className="p-2 rounded-full hover:bg-gray-100">
                   <MoreHorizontal className="w-4 h-4 text-gray-500" />
                 </Menu.Button>
-                <Menu.Items className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                <Menu.Items className="absolute right-0 z-10 w-48 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <Menu.Item>
                     {({ active }) => (
                       <button className={`${active ? 'bg-gray-100' : ''} flex items-center w-full px-4 py-2 text-sm text-gray-700`}>
@@ -129,13 +128,13 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
               <div><span className="text-gray-500">Description:</span> {task.description}</div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
-                  <span className="text-gray-500 mr-2">Status:</span>
+                  <span className="mr-2 text-gray-500">Status:</span>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(task.status)}`}>
                     {task.status.replace('_', ' ')}
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-gray-500 mr-2">Priority:</span>
+                  <span className="mr-2 text-gray-500">Priority:</span>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPriorityBadgeColor(task.priority)}`}>
                     {task.priority}
                   </span>
@@ -160,7 +159,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
           <tr>
             <th
               onClick={() => handleSort('title')}
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
             >
               Task
               {sortField === 'title' && (
@@ -169,7 +168,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
             </th>
             <th
               onClick={() => handleSort('status')}
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
             >
               Status
               {sortField === 'status' && (
@@ -178,7 +177,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
             </th>
             <th
               onClick={() => handleSort('priority')}
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
             >
               Priority
               {sortField === 'priority' && (
@@ -187,7 +186,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
             </th>
             <th
               onClick={() => handleSort('assignee')}
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
             >
               Assignee
               {sortField === 'assignee' && (
@@ -196,7 +195,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
             </th>
             <th
               onClick={() => handleSort('deadline')}
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
             >
               Deadline
               {sortField === 'deadline' && (
@@ -214,7 +213,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
               <td className="px-6 py-4">
                 <div>
                   <div className="text-sm font-medium text-gray-900">{task.title}</div>
-                  <div className="text-sm text-gray-500 truncate max-w-xs">{task.description}</div>
+                  <div className="max-w-xs text-sm text-gray-500 truncate">{task.description}</div>
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
@@ -229,19 +228,19 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
-                  <User className="w-4 h-4 text-gray-400 mr-2" />
+                  <User className="w-4 h-4 mr-2 text-gray-400" />
                   <span className="text-sm text-gray-900">{task.assignee}</span>
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 text-gray-400 mr-2" />
+                  <Calendar className="w-4 h-4 mr-2 text-gray-400" />
                   <span className={`text-sm ${isOverdue(task.deadline) ? 'text-red-600 font-medium' : 'text-gray-900'}`}>
                     {formatDate(task.deadline)}
                   </span>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                 <Menu as="div" className="relative inline-block text-left">
                   <Menu.Button className="p-2 rounded-full hover:bg-gray-100">
                     <MoreHorizontal className="w-4 h-4 text-gray-500" />
@@ -255,7 +254,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                    <Menu.Items className="absolute right-0 z-10 w-48 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
                         {({ active }) => (
                           <button
@@ -288,7 +287,7 @@ export default function TaskTable({ tasks, onUpdate }: TaskTableProps) {
       </div>
       
       {sortedTasks.length === 0 && (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-gray-500">No tasks found</p>
         </div>
       )}

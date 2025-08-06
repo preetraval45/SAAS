@@ -75,7 +75,7 @@ export default function Navigation() {
   return (
     <>
       {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="fixed z-50 lg:hidden top-4 left-4">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 bg-white rounded-lg shadow-md"
@@ -88,7 +88,7 @@ export default function Navigation() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -140,6 +140,7 @@ export default function Navigation() {
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
+                prefetch={true}
               >
                 <Icon className="w-5 h-5 mr-3" />
                 <span className="font-medium">{item.name}</span>
@@ -150,32 +151,38 @@ export default function Navigation() {
         
         {/* Role indicator */}
         <motion.div 
-          className="mt-6 pt-4 border-t border-gray-200"
+          className="pt-4 mt-6 border-t border-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
           <div className="px-4 py-2">
-            <motion.span 
-              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                user?.role === 'SuperUser' ? 'bg-purple-100 text-purple-800' :
-                user?.role === 'Admin' ? 'bg-blue-100 text-blue-800' :
-                'bg-gray-100 text-gray-800'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {user?.role} Access
-            </motion.span>
+            {(() => {
+              let roleClass = 'bg-gray-100 text-gray-800';
+              if (user?.role === 'SuperUser') {
+                roleClass = 'bg-purple-100 text-purple-800';
+              } else if (user?.role === 'Admin') {
+                roleClass = 'bg-blue-100 text-blue-800';
+              }
+              return (
+                <motion.span 
+                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${roleClass}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {user?.role} Access
+                </motion.span>
+              );
+            })()}
           </div>
         </motion.div>
       </nav>
 
       {/* User Profile */}
-      <div className="border-t border-gray-200 p-4">
+      <div className="p-4 border-t border-gray-200">
         <Menu as="div" className="relative">
           <Menu.Button className="flex items-center w-full px-4 py-3 text-left rounded-lg hover:bg-gray-100">
-            <User className="w-8 h-8 text-gray-400 mr-3" />
+            <User className="w-8 h-8 mr-3 text-gray-400" />
             <div className="flex-1">
               <p className="text-sm font-medium text-gray-900">{user?.username}</p>
               <p className="text-xs text-blue-600">{user?.role}</p>
@@ -190,7 +197,7 @@ export default function Navigation() {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute bottom-full left-0 w-full mb-2 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute left-0 w-full mb-2 bg-white rounded-lg shadow-lg bottom-full ring-1 ring-black ring-opacity-5 focus:outline-none">
               <Menu.Item>
                 {({ active }) => (
                   <button

@@ -17,13 +17,17 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
       case 'text':
         return (
           <div className={cn('space-y-2', className)}>
-            {[...Array(count)].map((_, i) => (
-              <div
-                key={i}
-                className="h-4 bg-gray-200 rounded animate-pulse"
-                style={{ width: `${Math.random() * 40 + 60}%` }}
-              />
-            ))}
+            {[...Array(count)].map((_, i) => {
+              // Generate a random width class for each skeleton line
+              const widths = ['w-3/5', 'w-2/3', 'w-3/4', 'w-4/5', 'w-full'];
+              const widthClass = widths[Math.floor(Math.random() * widths.length)];
+              return (
+                <div
+                  key={`skeleton-text-${type}-${i}`}
+                  className={cn("h-4 bg-gray-200 rounded animate-pulse", widthClass)}
+                />
+              );
+            })}
           </div>
         );
       
@@ -33,8 +37,8 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse" />
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
-                <div className="h-3 bg-gray-200 rounded animate-pulse w-1/2" />
+                <div className="w-3/4 h-4 bg-gray-200 rounded animate-pulse" />
+                <div className="w-1/2 h-3 bg-gray-200 rounded animate-pulse" />
               </div>
             </div>
           </div>
@@ -45,8 +49,8 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           <div className={cn('flex items-center space-x-3', className)}>
             <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
             <div className="space-y-2">
-              <div className="h-4 bg-gray-200 rounded animate-pulse w-24" />
-              <div className="h-3 bg-gray-200 rounded animate-pulse w-16" />
+              <div className="w-24 h-4 bg-gray-200 rounded animate-pulse" />
+              <div className="w-16 h-3 bg-gray-200 rounded animate-pulse" />
             </div>
           </div>
         );
@@ -62,8 +66,8 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
         return (
           <div className={cn('space-y-4', className)}>
             {[...Array(count)].map((_, i) => (
-              <div key={i} className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
+              <div key={`skeleton-form-${type}-${count}-${i}`} className="space-y-2">
+                <div className="w-20 h-4 bg-gray-200 rounded animate-pulse" />
                 <div className="h-10 bg-gray-200 rounded animate-pulse" />
               </div>
             ))}
@@ -89,7 +93,7 @@ export const LoadingSpinner: React.FC<{ size?: 'sm' | 'md' | 'lg' }> = ({ size =
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex items-center justify-center">
       <div
         className={cn(
           'animate-spin rounded-full border-2 border-gray-300 border-t-blue-600',
@@ -102,7 +106,7 @@ export const LoadingSpinner: React.FC<{ size?: 'sm' | 'md' | 'lg' }> = ({ size =
 
 // Full page loader
 export const PageLoader: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center">
+  <div className="flex items-center justify-center min-h-screen">
     <LoadingSpinner size="lg" />
   </div>
 );

@@ -30,7 +30,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
   }
 
-  private handleReset = () => {
+  private readonly handleReset = () => {
     this.setState({ hasError: false, error: null });
   };
 
@@ -41,19 +41,19 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
+        <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50">
+          <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
             <div className="text-center">
-              <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Something went wrong
               </h2>
-              <p className="text-gray-600 mb-4">
+              <p className="mb-4 text-gray-600">
                 {this.state.error?.message || 'An unexpected error occurred'}
               </p>
               <button
                 onClick={this.handleReset}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center px-4 py-2 text-white transition-colors bg-blue-600 rounded-md hover:bg-blue-700"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Try again
@@ -76,9 +76,9 @@ export const useErrorBoundary = () => {
     <ErrorBoundary
       onError={(err) => setError(err)}
       fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Error</h2>
+            <h2 className="mb-2 text-2xl font-bold text-gray-900">Error</h2>
             <p className="text-gray-600">{error?.message}</p>
           </div>
         </div>

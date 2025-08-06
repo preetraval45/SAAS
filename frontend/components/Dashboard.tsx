@@ -39,15 +39,16 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="min-h-screen p-6 bg-gray-50">
         <div className="mb-8">
-          <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-2"></div>
-          <div className="h-4 w-64 bg-gray-200 rounded animate-pulse"></div>
+          <div className="w-48 h-8 mb-2 bg-gray-200 rounded animate-pulse"></div>
+          <div className="w-64 h-4 bg-gray-200 rounded animate-pulse"></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <CardSkeleton key={i} />
-          ))}
+        <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => {
+            const skeletonKey = `skeleton-${i}-${Math.random().toString(36).substring(2, 11)}`;
+            return <CardSkeleton key={skeletonKey} />;
+          })}
         </div>
       </div>
     );
@@ -55,7 +56,7 @@ export default function Dashboard() {
 
   return (
     <motion.div 
-      className="p-6 bg-gray-50 min-h-screen"
+      className="min-h-screen p-6 bg-gray-50"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -68,17 +69,25 @@ export default function Dashboard() {
         transition={{ delay: 0.1 }}
       >
         <h1 className="text-3xl font-bold text-blue-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome back, {user?.username}</p>
+        <p className="mt-2 text-gray-600">Welcome back, {user?.username}</p>
       </motion.div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
         {overviewCards.map((card, index) => {
           const Icon = card.icon;
+          // Extract the color class from the changeType
+          let changeColorClass = 'text-gray-500';
+          if (card.changeType === 'positive') {
+            changeColorClass = 'text-green-600';
+          } else if (card.changeType === 'negative') {
+            changeColorClass = 'text-red-600';
+          }
+
           return (
             <motion.div 
               key={card.title} 
-              className="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+              className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 + index * 0.1 }}
@@ -87,12 +96,8 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">{card.title}</p>
-                  <p className="text-2xl font-bold text-blue-900 mt-2">{card.value}</p>
-                  <p className={`text-sm mt-1 ${
-                    card.changeType === 'positive' ? 'text-green-600' :
-                    card.changeType === 'negative' ? 'text-red-600' :
-                    'text-gray-500'
-                  }`}>
+                  <p className="mt-2 text-2xl font-bold text-blue-900">{card.value}</p>
+                  <p className={`text-sm mt-1 ${changeColorClass}`}>
                     {card.change}
                   </p>
                 </div>
@@ -110,14 +115,14 @@ export default function Dashboard() {
       </div>
 
       {/* Additional Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <motion.div 
-          className="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+          className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">Recent Activity</h3>
+          <h3 className="mb-4 text-lg font-semibold text-blue-900">Recent Activity</h3>
           <div className="space-y-4">
             {[
               { color: 'bg-green-500', text: 'New user registered - 2 hours ago' },
@@ -125,7 +130,7 @@ export default function Dashboard() {
               { color: 'bg-yellow-500', text: 'System maintenance - 1 day ago' }
             ].map((item, index) => (
               <motion.div 
-                key={index}
+                key={item.text}
                 className="flex items-center space-x-3"
                 initial={{ x: -10, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -139,12 +144,12 @@ export default function Dashboard() {
         </motion.div>
 
         <motion.div 
-          className="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+          className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">Quick Actions</h3>
+          <h3 className="mb-4 text-lg font-semibold text-blue-900">Quick Actions</h3>
           <div className="space-y-3">
             {[
               'Create New Task',
@@ -153,7 +158,7 @@ export default function Dashboard() {
             ].map((action, index) => (
               <motion.button 
                 key={action}
-                className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                className="w-full p-3 text-left transition-colors border border-gray-200 rounded-lg hover:bg-gray-50"
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8 + index * 0.1 }}

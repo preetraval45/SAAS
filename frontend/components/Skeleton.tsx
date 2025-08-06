@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 interface SkeletonProps {
-  className?: string;
+  readonly className?: string;
 }
 
 export function Skeleton({ className = '' }: SkeletonProps) {
@@ -15,16 +15,16 @@ export function Skeleton({ className = '' }: SkeletonProps) {
   );
 }
 
-export function TableSkeleton({ rows = 5 }: { rows?: number }) {
+export function TableSkeleton({ rows = 5 }: { readonly rows?: number }) {
   return (
     <div className="space-y-3">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="flex space-x-4">
-          <Skeleton className="h-4 w-1/4" />
-          <Skeleton className="h-4 w-1/6" />
-          <Skeleton className="h-4 w-1/6" />
-          <Skeleton className="h-4 w-1/4" />
-          <Skeleton className="h-4 w-1/6" />
+        <div key={`table-skeleton-row-${i}-${rows}`} className="flex space-x-4">
+          <Skeleton className="w-1/4 h-4" />
+          <Skeleton className="w-1/6 h-4" />
+          <Skeleton className="w-1/6 h-4" />
+          <Skeleton className="w-1/4 h-4" />
+          <Skeleton className="w-1/6 h-4" />
         </div>
       ))}
     </div>
@@ -33,14 +33,14 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
 
 export function CardSkeleton() {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-8 w-16" />
-          <Skeleton className="h-3 w-12" />
+          <Skeleton className="w-20 h-4" />
+          <Skeleton className="w-16 h-8" />
+          <Skeleton className="w-12 h-3" />
         </div>
-        <Skeleton className="h-12 w-12 rounded-lg" />
+        <Skeleton className="w-12 h-12 rounded-lg" />
       </div>
     </div>
   );

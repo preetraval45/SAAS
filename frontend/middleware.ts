@@ -6,10 +6,12 @@ export function middleware(request: NextRequest) {
   
   // Skip middleware for public routes and API routes
   if (
+    pathname === '/' ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith('/favicon') ||
+    pathname.includes('.') // Skip static files
   ) {
     return NextResponse.next();
   }
@@ -17,8 +19,10 @@ export function middleware(request: NextRequest) {
   // Check for authentication token in cookies
   const token = request.cookies.get('access_token');
   
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (!token && pathname !== '/login') {
+    const url = new URL('/login', request.url);
+    url.searchParams.set('from', pathname);
+    return NextResponse.redirect(url);
   }
 
   // Role-based route protection
@@ -45,6 +49,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
   ],
 };
